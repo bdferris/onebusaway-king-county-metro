@@ -12,4 +12,9 @@
     <name>onebusaway-king-county-metro</name>
     <description>King County Metro modules</description>
     <packaging>pom</packaging>
+
+    <modules>
+        <module>onebusaway-king-county-metro-gtfs</module>
+        <module>onebusaway-king-county-metro-service-alerts</module>
+    </modules>
 </project>

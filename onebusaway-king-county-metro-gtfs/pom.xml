@@ -2,20 +2,20 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>onebusaway</artifactId>
+        <artifactId>onebusaway-king-county-metro</artifactId>
         <groupId>org.onebusaway</groupId>
-        <version>1.0.6</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.onebusaway</groupId>
     <artifactId>onebusaway-king-county-metro-gtfs</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>onebusaway-king-county-metro-gtfs</name>
     <description>Modifications and improvements on the base King County Metro GTFS</description>
+
     <dependencies>
-    	<dependency>
-    		<groupId>org.onebusaway</groupId>
-    		<artifactId>onebusaway-gtfs-transformer</artifactId>
-    		<version>1.1.8-SNAPSHOT</version>
-    	</dependency>
+        <dependency>
+            <groupId>org.onebusaway</groupId>
+            <artifactId>onebusaway-gtfs-transformer</artifactId>
+            <version>1.1.8-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
