@@ -14,8 +14,9 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.onebusaway.collections.FactoryMap;
-import org.onebusaway.king_county_metro_gtfs.service_alerts.snow.model.ActiveReroute;
-import org.onebusaway.king_county_metro_gtfs.service_alerts.snow.model.ActiveRerouteRef;
+import org.onebusaway.king_county_metro.service_alerts.snow.model.ActiveReroute;
+import org.onebusaway.king_county_metro.service_alerts.snow.model.ActiveRerouteRef;
+import org.onebusaway.king_county_metro.service_alerts.snow.server.RerouteDownloaderLibrary;
 
 public class RerouteDownloaderLibraryTest {
 
