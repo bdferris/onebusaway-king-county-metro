@@ -1,20 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>onebusaway</artifactId>
-        <groupId>org.onebusaway</groupId>
-        <version>1.0.6</version>
-    </parent>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>onebusaway</artifactId>
     <groupId>org.onebusaway</groupId>
-    <artifactId>onebusaway-king-county-metro</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>onebusaway-king-county-metro</name>
-    <description>King County Metro modules</description>
-    <packaging>pom</packaging>
+    <version>1.0.6</version>
+  </parent>
+  <groupId>org.onebusaway</groupId>
+  <artifactId>onebusaway-king-county-metro</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>onebusaway-king-county-metro</name>
+  <description>King County Metro modules</description>
+  <packaging>pom</packaging>
 
-    <modules>
-        <module>onebusaway-king-county-metro-gtfs</module>
-        <module>onebusaway-king-county-metro-service-alerts</module>
-    </modules>
+  <modules>
+    <module>onebusaway-king-county-metro-gtfs</module>
+    <module>onebusaway-king-county-metro-service-alerts</module>
+    <module>onebusaway-king-county-metro-service-alerts-webapp</module>
+  </modules>
+
+  <!-- This is where we control the master dependency version used by all modules -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.6.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.6.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.8.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>1.8.0</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
