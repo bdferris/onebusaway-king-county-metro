@@ -9,4 +9,16 @@
   <import resource="file:/Users/bdferris/oba/onebusaway-config/src/main/resources/data-sources-users-common.xml" />
   <import resource="file:/Users/bdferris/oba/onebusaway-config/src/main/resources/data-sources-users-extended.xml" />
 
+  <bean class="org.onebusaway.king_county_metro.service_alerts.impl.AlertDownloaderTask">
+    <property name="url" value="file:///Users/bdferris/Desktop/Weather/current.html" />
+  </bean>
+
+  <bean class="org.onebusaway.container.spring.PropertyOverrideConfigurer">
+    <property name="properties">
+      <props>
+        <prop key="alertServiceImpl.path">/Users/bdferris/oba/local-bundles/king_county_metro/2010_11_22-snow/reroutes.obj</prop>
+      </props>
+    </property>
+  </bean>
+
 </beans>

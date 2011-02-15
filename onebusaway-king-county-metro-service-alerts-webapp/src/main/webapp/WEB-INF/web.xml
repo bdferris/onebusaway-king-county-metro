@@ -80,9 +80,25 @@
             <param-value>org.onebusaway.users.impl.SpringLoginManagerFactory</param-value>
         </init-param>
     </servlet>
+    <servlet>
+        <servlet-name>ApiProxyServlet</servlet-name>
+        <servlet-class>org.onebusaway.presentation.impl.ProxyServlet</servlet-class>
+        <init-param>
+            <param-name>source</param-name>
+            <param-value>/onebusaway-king-county-metro-service-alerts-webapp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>target</param-name>
+            <param-value>/onebusaway-api-webapp</param-value>
+        </init-param>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/services/login/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApiProxyServlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
     <!-- Welcome file lists -->

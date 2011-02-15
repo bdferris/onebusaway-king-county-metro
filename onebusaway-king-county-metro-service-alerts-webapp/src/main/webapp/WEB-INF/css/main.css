@@ -174,3 +174,55 @@ h6 {
 .one-third {
 	width: 300px
 }
+
+/****
+ *
+ ****/
+ 
+div#header {
+  border-bottom: 1px solid #CCCCCC;
+  margin-bottom: 1em;
+}
+
+table.alertsTable {
+	width: 100%;
+}
+
+table.alertsTable > thead > tr {
+  background-color: #6D6E72;
+}
+
+table.alertsTable > thead > tr > td {
+    color: white;
+    font-weight: bold;
+    padding: 5px 5px 5px 1em;
+    
+}
+
+table.alertsTable > tbody > tr > td {
+	padding: 5px 1em 0 1em;
+}
+
+/****
+ *
+ ****/
+ 
+div.routeMap {
+	width: 200px;
+	height: 200px;
+}
+
+div.alertConfiguration {
+	position: relative;
+} 
+
+.alertConfiguration-Map {
+	width: 200px;
+	height: 200px;	
+}
+
+table.alertConfiguration {
+	position: absolute;
+	left: 220px;
+	top: 0px;	
+}

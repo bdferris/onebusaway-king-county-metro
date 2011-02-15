@@ -14,9 +14,9 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.onebusaway.collections.FactoryMap;
-import org.onebusaway.king_county_metro.service_alerts.snow.model.ActiveReroute;
-import org.onebusaway.king_county_metro.service_alerts.snow.model.ActiveRerouteRef;
-import org.onebusaway.king_county_metro.service_alerts.snow.server.RerouteDownloaderLibrary;
+import org.onebusaway.king_county_metro.service_alerts.impl.AlertDownloaderLibrary;
+import org.onebusaway.king_county_metro.service_alerts.model.AlertDescription;
+import org.onebusaway.king_county_metro.service_alerts.model.RouteAndRegionRef;
 
 public class RerouteDownloaderLibraryTest {
 
@@ -31,24 +31,24 @@ public class RerouteDownloaderLibraryTest {
       }
     });
 
-    RerouteDownloaderLibrary library = new RerouteDownloaderLibrary();
+    AlertDownloaderLibrary library = new AlertDownloaderLibrary();
 
-    Map<ActiveRerouteRef, Map<String, ActiveReroute>> reroutesByRefAndDescription = new FactoryMap<ActiveRerouteRef, Map<String, ActiveReroute>>(
-        new HashMap<String, ActiveReroute>());
+    Map<RouteAndRegionRef, Map<String, AlertDescription>> reroutesByRefAndDescription = new FactoryMap<RouteAndRegionRef, Map<String, AlertDescription>>(
+        new HashMap<String, AlertDescription>());
 
     for (File file : files) {
 
       System.out.println(file.getName());
 
-      Map<ActiveRerouteRef, Map<String, ActiveReroute>> newReroutesByRefAndDescription = new FactoryMap<ActiveRerouteRef, Map<String, ActiveReroute>>(
-          new HashMap<String, ActiveReroute>());
+      Map<RouteAndRegionRef, Map<String, AlertDescription>> newReroutesByRefAndDescription = new FactoryMap<RouteAndRegionRef, Map<String, AlertDescription>>(
+          new HashMap<String, AlertDescription>());
 
       BufferedReader reader = new BufferedReader(new FileReader(file));
-      List<ActiveReroute> records = library.parseRecords(reader);
-      for (ActiveReroute record : records) {
-        ActiveRerouteRef ref = record.getRef();
-        Map<String, ActiveReroute> reroutesByDescription = newReroutesByRefAndDescription.get(ref);
-        ActiveReroute existing = reroutesByDescription.put(
+      List<AlertDescription> records = library.parseRecords(reader);
+      for (AlertDescription record : records) {
+        RouteAndRegionRef ref = record.getRef();
+        Map<String, AlertDescription> reroutesByDescription = newReroutesByRefAndDescription.get(ref);
+        AlertDescription existing = reroutesByDescription.put(
             record.getDescription(), record);
         if (existing != null && ! existing.allPropertiesAreEqual(record)) {
           System.err.println("overlapping reroutes: from=" + existing);
@@ -58,23 +58,23 @@ public class RerouteDownloaderLibraryTest {
         record.getDescription();
       }
 
-      Set<ActiveRerouteRef> refs = new HashSet<ActiveRerouteRef>();
+      Set<RouteAndRegionRef> refs = new HashSet<RouteAndRegionRef>();
       refs.addAll(reroutesByRefAndDescription.keySet());
       refs.addAll(newReroutesByRefAndDescription.keySet());
-      List<ActiveRerouteRef> orderedRefs = new ArrayList<ActiveRerouteRef>(refs);
+      List<RouteAndRegionRef> orderedRefs = new ArrayList<RouteAndRegionRef>(refs);
       Collections.sort(orderedRefs);
-      for (ActiveRerouteRef ref : orderedRefs) {
+      for (RouteAndRegionRef ref : orderedRefs) {
         System.out.println("ref=" + ref);
-        Map<String, ActiveReroute> from = reroutesByRefAndDescription.get(ref);
-        Map<String, ActiveReroute> to = newReroutesByRefAndDescription.get(ref);
+        Map<String, AlertDescription> from = reroutesByRefAndDescription.get(ref);
+        Map<String, AlertDescription> to = newReroutesByRefAndDescription.get(ref);
         Set<String> descs = new HashSet<String>();
         descs.addAll(from.keySet());
         descs.addAll(to.keySet());
         List<String> orderedDescs = new ArrayList<String>(descs);
         Collections.sort(orderedDescs);
         for (String desc : orderedDescs) {
-          ActiveReroute fromReroute = from.get(desc);
-          ActiveReroute toReroute = to.get(desc);
+          AlertDescription fromReroute = from.get(desc);
+          AlertDescription toReroute = to.get(desc);
           if (fromReroute == null && toReroute != null) {
             System.out.println("   ADD: " + desc);
           } else if (fromReroute != null && toReroute == null) {

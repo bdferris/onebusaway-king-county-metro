@@ -26,6 +26,12 @@
     <dependency>
       <groupId>org.onebusaway</groupId>
       <artifactId>onebusaway-users</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.hsqldb</groupId>
+          <artifactId>hsqldb</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
