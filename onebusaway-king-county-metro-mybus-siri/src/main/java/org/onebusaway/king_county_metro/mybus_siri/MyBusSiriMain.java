@@ -15,6 +15,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 import org.onebusaway.siri.core.SiriServer;
+import org.onebusaway.siri.jetty.SiriJettyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public class MyBusSiriMain {
 
   public void run(String serverUrl) throws IOException {
 
-    _siriServer = new SiriServer();
+    _siriServer = new SiriJettyServer();
 
     if (serverUrl != null)
       _siriServer.setServerUrl(serverUrl);

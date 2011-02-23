@@ -21,8 +21,8 @@
 
     <dependency>
       <groupId>org.onebusaway</groupId>
-      <artifactId>onebusaway-siri-core</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <artifactId>onebusaway-siri-jetty</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
     </dependency>
 
     <dependency>
