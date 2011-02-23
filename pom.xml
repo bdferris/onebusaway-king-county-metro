@@ -46,6 +46,7 @@
   <modules>
     <module>onebusaway-king-county-metro-gtfs</module>
     <module>onebusaway-king-county-metro-mybus-siri</module>
+    <module>onebusaway-king-county-metro-service-alerts</module>
   </modules>
 
   <!-- This is where we control the master dependency version used by all modules -->
