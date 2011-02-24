@@ -47,11 +47,11 @@ public class DaoStrategy implements GtfsTransformStrategy {
         List<Class<?>> entityClasses = reader.getEntityClasses();
         entityClasses.clear();
         entityClasses.add(MetroKCChangeDate.class);
-        entityClasses.add(MetroKCStop.class);
         entityClasses.add(MetroKCTrip.class);
-        entityClasses.add(MetroKCPatternPair.class);
-        entityClasses.add(MetroKCStopTime.class);
-        entityClasses.add(MetroKCBlockTrip.class);
+        //entityClasses.add(MetroKCStop.class);
+        //entityClasses.add(MetroKCPatternPair.class);
+        //entityClasses.add(MetroKCStopTime.class);
+        //entityClasses.add(MetroKCBlockTrip.class);
 
         reader.run();
       } catch (Exception ex) {

@@ -11,7 +11,18 @@
 
   <name>onebusaway-king-county-metro-service-alerts</name>
 
+  <properties>
+    <onebusaway-service-alerts-version>0.0.1-SNAPSHOT</onebusaway-service-alerts-version>
+  </properties>
+
   <dependencies>
+
+    <dependency>
+      <groupId>org.onebusaway</groupId>
+      <artifactId>onebusaway-service-alerts-core</artifactId>
+      <version>${onebusaway-service-alerts-version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

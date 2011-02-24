@@ -83,7 +83,7 @@ public class CalendarUpdateStrategy implements GtfsTransformStrategy {
       trip.setServiceId(serviceId);
     }
 
-    _log.info("totalTrips=" + total + " withoutMetroKCTrip" + misses);
+    _log.info("totalTrips=" + total + " withoutMetroKCTrip=" + misses);
 
     // Remove any service dates still not in use
     for (ServiceCalendar serviceCalendar : existingCalendars) {
