@@ -5,7 +5,7 @@
   <parent>
     <artifactId>onebusaway</artifactId>
     <groupId>org.onebusaway</groupId>
-    <version>1.0.6</version>
+    <version>1.1.0</version>
   </parent>
   <groupId>org.onebusaway</groupId>
   <artifactId>onebusaway-king-county-metro</artifactId>
@@ -42,6 +42,20 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <scm>
+    <connection>scm:svn:http://onebusaway.googlecode.com/svn/onebusaway-king-county-metro/trunk</connection>
+    <developerConnection>scm:svn:https://onebusaway.googlecode.com/svn/onebusaway-king-county-metro/trunk</developerConnection>
+    <url>http://code.google.com/p/onebusaway/source/browse/#svn/onebusaway-king-county-metro/trunk</url>
+  </scm>
+
+  <distributionManagement>
+    <!-- Even though we specify this in the parent pom, we need to specify it here to have full control over the url -->
+    <site>
+      <id>${site_id}</id>
+      <url>${site_url}</url>
+    </site>
+  </distributionManagement>
 
   <modules>
     <module>onebusaway-king-county-metro-gtfs</module>
