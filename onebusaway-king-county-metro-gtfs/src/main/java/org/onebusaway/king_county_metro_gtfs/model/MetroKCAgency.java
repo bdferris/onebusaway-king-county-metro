@@ -1,6 +1,6 @@
 package org.onebusaway.king_county_metro_gtfs.model;
 
-import org.onebusaway.gtfs.csv.schema.annotations.CsvFields;
+import org.onebusaway.csv_entities.schema.annotations.CsvFields;
 
 @CsvFields(filename = "agency.csv")
 public class MetroKCAgency {

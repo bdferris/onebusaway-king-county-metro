@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.onebusaway.gtfs.csv.CsvEntityReader;
-import org.onebusaway.gtfs.csv.EntityHandler;
-import org.onebusaway.gtfs.csv.schema.AnnotationDrivenEntitySchemaFactory;
-import org.onebusaway.gtfs.csv.schema.DefaultEntitySchemaFactory;
+import org.onebusaway.csv_entities.CsvEntityReader;
+import org.onebusaway.csv_entities.EntityHandler;
+import org.onebusaway.csv_entities.schema.AnnotationDrivenEntitySchemaFactory;
+import org.onebusaway.csv_entities.schema.DefaultEntitySchemaFactory;
 import org.onebusaway.gtfs.impl.GenericDaoImpl;
 import org.onebusaway.gtfs.services.GenericMutableDao;
 import org.slf4j.Logger;

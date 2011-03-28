@@ -2,8 +2,8 @@ package org.onebusaway.king_county_metro_gtfs.transformations;
 
 import java.util.Collection;
 
-import org.onebusaway.gtfs.csv.schema.BeanWrapper;
-import org.onebusaway.gtfs.csv.schema.BeanWrapperFactory;
+import org.onebusaway.csv_entities.schema.BeanWrapper;
+import org.onebusaway.csv_entities.schema.BeanWrapperFactory;
 import org.onebusaway.gtfs.model.AgencyAndId;
 import org.onebusaway.gtfs.services.GtfsMutableRelationalDao;
 import org.onebusaway.gtfs_transformer.services.GtfsTransformStrategy;

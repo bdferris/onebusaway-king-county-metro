@@ -3,8 +3,8 @@
  */
 package org.onebusaway.king_county_metro_gtfs.model;
 
-import org.onebusaway.gtfs.csv.schema.annotations.CsvField;
-import org.onebusaway.gtfs.csv.schema.annotations.CsvFields;
+import org.onebusaway.csv_entities.schema.annotations.CsvField;
+import org.onebusaway.csv_entities.schema.annotations.CsvFields;
 
 @CsvFields(filename = "trans_link_shape_point.csv")
 public class MetroKCShapePoint implements Comparable<MetroKCShapePoint> {

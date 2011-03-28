@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.onebusaway.gtfs.csv.CsvEntityContext;
-import org.onebusaway.gtfs.csv.schema.AbstractFieldMapping;
-import org.onebusaway.gtfs.csv.schema.BeanWrapper;
-import org.onebusaway.gtfs.csv.schema.DefaultEntitySchemaFactory;
-import org.onebusaway.gtfs.csv.schema.beans.CsvEntityMappingBean;
+import org.onebusaway.csv_entities.CsvEntityContext;
+import org.onebusaway.csv_entities.schema.AbstractFieldMapping;
+import org.onebusaway.csv_entities.schema.BeanWrapper;
+import org.onebusaway.csv_entities.schema.DefaultEntitySchemaFactory;
+import org.onebusaway.csv_entities.schema.beans.CsvEntityMappingBean;
 import org.onebusaway.gtfs.model.AgencyAndId;
 import org.onebusaway.gtfs.model.Stop;
 import org.onebusaway.gtfs.model.Trip;

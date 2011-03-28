@@ -1,17 +1,17 @@
 package org.onebusaway.king_county_metro_gtfs;
 
-import org.onebusaway.gtfs.csv.CsvEntityContext;
-import org.onebusaway.gtfs.csv.schema.AbstractFieldMapping;
-import org.onebusaway.gtfs.csv.schema.BeanWrapper;
-import org.onebusaway.gtfs.csv.schema.EntitySchemaFactory;
-import org.onebusaway.gtfs.csv.schema.FieldMapping;
-import org.onebusaway.gtfs.csv.schema.FieldMappingFactory;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+
+import org.onebusaway.csv_entities.CsvEntityContext;
+import org.onebusaway.csv_entities.schema.AbstractFieldMapping;
+import org.onebusaway.csv_entities.schema.BeanWrapper;
+import org.onebusaway.csv_entities.schema.EntitySchemaFactory;
+import org.onebusaway.csv_entities.schema.FieldMapping;
+import org.onebusaway.csv_entities.schema.FieldMappingFactory;
 
 public class MetroKCDateFieldMappingFactory implements FieldMappingFactory {
 

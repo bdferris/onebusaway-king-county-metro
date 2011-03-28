@@ -5,7 +5,7 @@ package org.onebusaway.king_county_metro_gtfs.model;
 
 import java.io.Serializable;
 
-import org.onebusaway.gtfs.csv.schema.annotations.CsvField;
+import org.onebusaway.csv_entities.schema.annotations.CsvField;
 
 public class VersionedId implements Comparable<VersionedId>, Serializable {
 

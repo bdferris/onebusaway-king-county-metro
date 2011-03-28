@@ -1,8 +1,8 @@
 package org.onebusaway.king_county_metro_gtfs.model;
 
-import org.onebusaway.gtfs.csv.schema.FlattenFieldMappingFactory;
-import org.onebusaway.gtfs.csv.schema.annotations.CsvField;
-import org.onebusaway.gtfs.csv.schema.annotations.CsvFields;
+import org.onebusaway.csv_entities.schema.FlattenFieldMappingFactory;
+import org.onebusaway.csv_entities.schema.annotations.CsvField;
+import org.onebusaway.csv_entities.schema.annotations.CsvFields;
 import org.onebusaway.gtfs.model.IdentityBean;
 
 @CsvFields(filename = "trips.csv", fieldOrder = {
