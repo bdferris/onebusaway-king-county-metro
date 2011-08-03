@@ -12,7 +12,7 @@
     <description>Modifications and improvements on the base King County Metro GTFS</description>
     
     <properties>
-      <onebusaway-gtfs-version>1.2.0</onebusaway-gtfs-version>
+      <onebusaway-gtfs-version>1.2.2</onebusaway-gtfs-version>
     </properties>
 
     <dependencies>

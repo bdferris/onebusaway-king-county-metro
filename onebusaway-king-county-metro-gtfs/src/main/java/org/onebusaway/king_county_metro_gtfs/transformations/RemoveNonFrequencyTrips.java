@@ -21,7 +21,6 @@ public class RemoveNonFrequencyTrips implements GtfsTransformStrategy {
         dao.getRouteForId(new AgencyAndId("ST", "100479")));
     removeNonFrequencyTripsForRoute(dao,
         dao.getRouteForId(new AgencyAndId("KCM", "100512")));
-
   }
 
   private void removeNonFrequencyTripsForRoute(GtfsMutableRelationalDao dao,

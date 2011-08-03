@@ -4,7 +4,9 @@ import its.SQL.ContentsData;
 import its.backbone.sdd.SddReceiver;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -14,20 +16,31 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.Parser;
 import org.onebusaway.siri.core.SiriServer;
 import org.onebusaway.siri.jetty.SiriJettyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.org.siri.siri.BlockRefStructure;
-import uk.org.siri.siri.CourseOfJourneyStructure;
+import uk.org.siri.siri.DataFrameRefStructure;
+import uk.org.siri.siri.FramedVehicleJourneyRefStructure;
+import uk.org.siri.siri.LocationStructure;
+import uk.org.siri.siri.ProgressBetweenStopsStructure;
 import uk.org.siri.siri.ServiceDelivery;
 import uk.org.siri.siri.VehicleActivityStructure;
 import uk.org.siri.siri.VehicleActivityStructure.MonitoredVehicleJourney;
 import uk.org.siri.siri.VehicleMonitoringDeliveryStructure;
+import uk.org.siri.siri.VehicleMonitoringRefStructure;
 import uk.org.siri.siri.VehicleRefStructure;
 
 public class MyBusSiriMain {
+
+  private static final String ARG_CONSUMER_ADDRESS_DEFAULT = "consumerAddressDefault";
 
   private static Logger _log = LoggerFactory.getLogger(MyBusSiriMain.class);
 
@@ -45,17 +58,40 @@ public class MyBusSiriMain {
 
   private SiriServer _siriServer;
 
+  private String _consumerAddressDefault;
+
+  private boolean _skip = false;
+
   public static void main(String[] args) throws IOException,
-      DatatypeConfigurationException {
+      DatatypeConfigurationException, ParseException {
 
     _dataTypeFactory = DatatypeFactory.newInstance();
 
+    MyBusSiriMain m = new MyBusSiriMain();
+
+    Options options = new Options();
+    options.addOption(ARG_CONSUMER_ADDRESS_DEFAULT, true, "");
+
+    Parser parser = new GnuParser();
+    CommandLine cli = parser.parse(options, args);
+
+    args = cli.getArgs();
+
     String serverUrl = null;
+
     if (args.length > 0)
       serverUrl = args[0];
 
-    MyBusSiriMain m = new MyBusSiriMain();
+    if (cli.hasOption(ARG_CONSUMER_ADDRESS_DEFAULT)) {
+      String consumerAddressDefault = cli.getOptionValue(ARG_CONSUMER_ADDRESS_DEFAULT);
+      m.setConsumerAddressDefault(consumerAddressDefault);
+    }
+
     m.run(serverUrl);
+  }
+
+  private void setConsumerAddressDefault(String consumerAddressDefault) {
+    _consumerAddressDefault = consumerAddressDefault;
   }
 
   public void run(String serverUrl) throws IOException {
@@ -63,7 +99,11 @@ public class MyBusSiriMain {
     _siriServer = new SiriJettyServer();
 
     if (serverUrl != null)
-      _siriServer.setServerUrl(serverUrl);
+      _siriServer.setUrl(serverUrl);
+
+    if (_consumerAddressDefault != null)
+      _siriServer.getSubscriptionManager().setConsumerAddressDefault(
+          _consumerAddressDefault);
 
     _siriServer.start();
 
@@ -72,6 +112,9 @@ public class MyBusSiriMain {
   }
 
   private void parsePredictions(Hashtable<?, ?> ht) {
+
+    if (_skip)
+      return;
 
     Map<String, List<TimepointPrediction>> predictionsByVehicleId = new HashMap<String, List<TimepointPrediction>>();
 
@@ -110,6 +153,7 @@ public class MyBusSiriMain {
     }
 
     ServiceDelivery delivery = new ServiceDelivery();
+
     List<VehicleMonitoringDeliveryStructure> vms = delivery.getVehicleMonitoringDelivery();
 
     VehicleMonitoringDeliveryStructure vm = new VehicleMonitoringDeliveryStructure();
@@ -122,10 +166,24 @@ public class MyBusSiriMain {
       VehicleActivityStructure va = new VehicleActivityStructure();
       activity.add(va);
 
+      va.setRecordedAtTime(new Date(System.currentTimeMillis()));
+      va.setValidUntilTime(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
+
+      VehicleMonitoringRefStructure vmRef = new VehicleMonitoringRefStructure();
+      vmRef.setValue("all");
+      va.setVehicleMonitoringRef(vmRef);
+
       TimepointPrediction prediction = getRepresentativePrediction(predictions);
 
       MonitoredVehicleJourney mvj = new MonitoredVehicleJourney();
       va.setMonitoredVehicleJourney(mvj);
+
+      FramedVehicleJourneyRefStructure fvjRef = new FramedVehicleJourneyRefStructure();
+      DataFrameRefStructure dataFrameRef = new DataFrameRefStructure();
+      dataFrameRef.setValue("data-frame-ref");
+      fvjRef.setDataFrameRef(dataFrameRef);
+      fvjRef.setDatedVehicleJourneyRef(prediction.getTripId());
+      mvj.setFramedVehicleJourneyRef(fvjRef);
 
       Duration delay = _dataTypeFactory.newDuration(prediction.getScheduleDeviation());
       mvj.setDelay(delay);
@@ -134,21 +192,28 @@ public class MyBusSiriMain {
       blockRef.setValue(prediction.getBlockId());
       mvj.setBlockRef(blockRef);
 
-      /**
-       * MonitoredVehicleJourney doesn't have a trip id, but we used the
-       * CourseOfJourneyRef as the trip id in the MTA implementation
-       */
-      CourseOfJourneyStructure courseOfJourneyRef = new CourseOfJourneyStructure();
-      courseOfJourneyRef.setValue(prediction.getTripId());
-      mvj.setCourseOfJourneyRef(courseOfJourneyRef);
-
       VehicleRefStructure vehicleRef = new VehicleRefStructure();
       vehicleRef.setValue(prediction.getVehicleId());
       mvj.setVehicleRef(vehicleRef);
-
+     
+      LocationStructure location = new LocationStructure();
+      location.setLatitude(BigDecimal.valueOf(47.5955716126442));
+      location.setLongitude(BigDecimal.valueOf(-122.33160460882567));
+      mvj.setVehicleLocation(location);
+      
+      ProgressBetweenStopsStructure progress = new ProgressBetweenStopsStructure();
+      va.setProgressBetweenStops(progress);
+      
+      progress.setLinkDistance(BigDecimal.valueOf(0));
+      progress.setPercentage(BigDecimal.valueOf(0));
     }
 
     _siriServer.publish(delivery);
+    /*
+    int rc = _siriServer.publish(delivery);
+    if (rc > 0)
+      _skip = true;
+    */
   }
 
   private TimepointPrediction getRepresentativePrediction(

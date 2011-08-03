@@ -9,11 +9,7 @@ import org.onebusaway.gtfs_transformer.services.TransformContext;
 import org.onebusaway.king_county_metro_gtfs.MetroKCDao;
 import org.onebusaway.king_county_metro_gtfs.MetroKCDaoImpl;
 import org.onebusaway.king_county_metro_gtfs.MetroKCDataReader;
-import org.onebusaway.king_county_metro_gtfs.model.MetroKCBlockTrip;
 import org.onebusaway.king_county_metro_gtfs.model.MetroKCChangeDate;
-import org.onebusaway.king_county_metro_gtfs.model.MetroKCPatternPair;
-import org.onebusaway.king_county_metro_gtfs.model.MetroKCStop;
-import org.onebusaway.king_county_metro_gtfs.model.MetroKCStopTime;
 import org.onebusaway.king_county_metro_gtfs.model.MetroKCTrip;
 
 /**
