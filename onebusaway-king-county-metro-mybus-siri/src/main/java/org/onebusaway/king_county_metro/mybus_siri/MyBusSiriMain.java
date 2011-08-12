@@ -21,8 +21,11 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
+import org.onebusaway.siri.core.SiriCoreModule;
 import org.onebusaway.siri.core.SiriServer;
-import org.onebusaway.siri.jetty.SiriJettyServer;
+import org.onebusaway.siri.core.guice.LifecycleService;
+import org.onebusaway.siri.core.subscriptions.server.SiriServerSubscriptionManager;
+import org.onebusaway.siri.jetty.SiriJettyModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +40,10 @@ import uk.org.siri.siri.VehicleActivityStructure.MonitoredVehicleJourney;
 import uk.org.siri.siri.VehicleMonitoringDeliveryStructure;
 import uk.org.siri.siri.VehicleMonitoringRefStructure;
 import uk.org.siri.siri.VehicleRefStructure;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 
 public class MyBusSiriMain {
 
@@ -61,6 +68,8 @@ public class MyBusSiriMain {
   private String _consumerAddressDefault;
 
   private boolean _skip = false;
+
+  private LifecycleService _lifecycleService;
 
   public static void main(String[] args) throws IOException,
       DatatypeConfigurationException, ParseException {
@@ -96,16 +105,23 @@ public class MyBusSiriMain {
 
   public void run(String serverUrl) throws IOException {
 
-    _siriServer = new SiriJettyServer();
+    List<Module> modules = new ArrayList<Module>();
+    modules.addAll(SiriCoreModule.getModules());
+    modules.add(new SiriJettyModule());
+    Injector injector = Guice.createInjector(modules);
+
+    _siriServer = injector.getInstance(SiriServer.class);
 
     if (serverUrl != null)
       _siriServer.setUrl(serverUrl);
 
-    if (_consumerAddressDefault != null)
-      _siriServer.getSubscriptionManager().setConsumerAddressDefault(
-          _consumerAddressDefault);
+    if (_consumerAddressDefault != null) {
+      SiriServerSubscriptionManager manager = injector.getInstance(SiriServerSubscriptionManager.class);
+      manager.setConsumerAddressDefault(_consumerAddressDefault);
+    }
 
-    _siriServer.start();
+    _lifecycleService = injector.getInstance(LifecycleService.class);
+    _lifecycleService.start();
 
     _receiver = new TimepointPredictionReceiver(_serverName, _serverPort);
     _receiver.start();
@@ -195,25 +211,23 @@ public class MyBusSiriMain {
       VehicleRefStructure vehicleRef = new VehicleRefStructure();
       vehicleRef.setValue(prediction.getVehicleId());
       mvj.setVehicleRef(vehicleRef);
-     
+
       LocationStructure location = new LocationStructure();
       location.setLatitude(BigDecimal.valueOf(47.5955716126442));
       location.setLongitude(BigDecimal.valueOf(-122.33160460882567));
       mvj.setVehicleLocation(location);
-      
+
       ProgressBetweenStopsStructure progress = new ProgressBetweenStopsStructure();
       va.setProgressBetweenStops(progress);
-      
+
       progress.setLinkDistance(BigDecimal.valueOf(0));
       progress.setPercentage(BigDecimal.valueOf(0));
     }
 
     _siriServer.publish(delivery);
     /*
-    int rc = _siriServer.publish(delivery);
-    if (rc > 0)
-      _skip = true;
-    */
+     * int rc = _siriServer.publish(delivery); if (rc > 0) _skip = true;
+     */
   }
 
   private TimepointPrediction getRepresentativePrediction(

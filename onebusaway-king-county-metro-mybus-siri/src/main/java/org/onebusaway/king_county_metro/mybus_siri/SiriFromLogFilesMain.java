@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -18,16 +19,22 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
+import org.onebusaway.siri.core.SiriCoreModule;
 import org.onebusaway.siri.core.SiriServer;
+import org.onebusaway.siri.core.guice.LifecycleService;
 import org.onebusaway.siri.core.handlers.SiriSubscriptionManagerListener;
 import org.onebusaway.siri.core.subscriptions.server.SiriServerSubscriptionManager;
 import org.onebusaway.siri.core.versioning.SiriVersioning;
-import org.onebusaway.siri.jetty.SiriJettyServer;
+import org.onebusaway.siri.jetty.SiriJettyModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.org.siri.Siri;
 import uk.org.siri.siri.ServiceDelivery;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 
 public class SiriFromLogFilesMain {
 
@@ -80,12 +87,17 @@ public class SiriFromLogFilesMain {
 
   public void run(String serverUrl, File dataDir) throws IOException {
 
-    _siriServer = new SiriJettyServer();
+    List<Module> modules = new ArrayList<Module>();
+    modules.addAll(SiriCoreModule.getModules());
+    modules.add(new SiriJettyModule());
+    Injector injector = Guice.createInjector(modules);
+
+    _siriServer = injector.getInstance(SiriServer.class);
 
     if (serverUrl != null)
       _siriServer.setUrl(serverUrl);
 
-    SiriServerSubscriptionManager manager = _siriServer.getSubscriptionManager();
+    SiriServerSubscriptionManager manager = injector.getInstance(SiriServerSubscriptionManager.class);
     manager.addListener(new SiriSubscriptionManagerListenerImpl());
 
     if (_consumerAddressDefault != null) {
@@ -100,7 +112,8 @@ public class SiriFromLogFilesMain {
 
     _executor = Executors.newSingleThreadExecutor();
 
-    _siriServer.start();
+    LifecycleService lifecycleService = injector.getInstance(LifecycleService.class);
+    lifecycleService.start();
   }
 
   private synchronized void checkExecutor(SiriServerSubscriptionManager manager) {
