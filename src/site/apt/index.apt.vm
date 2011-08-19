@@ -36,7 +36,7 @@ java \
  path/to/updated_gtfs
 +--+
 
-What exactly gets fixed:
+  What exactly gets fixed?
 
   * The big one: we fix the problem with through-routes that switch from one route to another in the middle of service,
 such as a route running through downtown.  Right now, the GTFS data from KCM incorrectly indicates where those route
