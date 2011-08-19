@@ -35,3 +35,15 @@ java \
  path/to/original_gtfs \
  path/to/updated_gtfs
 +--+
+
+What exactly gets fixed:
+
+  * The big one: we fix the problem with through-routes that switch from one route to another in the middle of service,
+such as a route running through downtown.  Right now, the GTFS data from KCM incorrectly indicates where those route
+transitions happen, which leads to a lot of confusion for riders.  We use the information in pattern_pairs.txt and from
+other sources to fix this issue.
+
+  * The other big one: we fix the problem with frequency-based routes.  Right now, that's mostly Rapid Ride A.  The KCM
+feed includes both the frequency-based trips and headway information AND the entire actual fixed schedule as well.  This
+leads to a lot of overlapping information and confusion.  We remove the duplicate fixed-schedule trips, leaving just the
+frequency-based trips.
