@@ -17,6 +17,7 @@
     <onebusaway.version>0.0.1-SNAPSHOT</onebusaway.version>
     <spring-version>3.0.3.RELEASE</spring-version>
     <struts-version>2.1.8.1</struts-version>
+    <onebusaway_gtfs_version>1.2.3</onebusaway_gtfs_version>
   </properties>
 
   <repositories>

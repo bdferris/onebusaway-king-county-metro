@@ -10,16 +10,12 @@
     <artifactId>onebusaway-king-county-metro-gtfs</artifactId>
     <name>onebusaway-king-county-metro-gtfs</name>
     <description>Modifications and improvements on the base King County Metro GTFS</description>
-    
-    <properties>
-      <onebusaway-gtfs-version>1.2.2</onebusaway-gtfs-version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.onebusaway</groupId>
             <artifactId>onebusaway-gtfs-transformer</artifactId>
-            <version>${onebusaway-gtfs-version}</version>
+            <version>${onebusaway_gtfs_version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,0 +1,37 @@
+onebusaway-king-county-metro
+
+  We provide a couple of libraries for dealing with data from {{{http://metro.kingcounty.gov/}King County Metro Transit}}.
+
+* Fixing the KCM GTFS
+
+  The KCM GTFS, {{{http://metro.kingcounty.gov/GTFS/}available here}}, has a couple of issues out of the box that need
+attention.  Fortunately, we have an automated process that attempts to address most of them.  To get started, you need
+to download a couple of items:
+
+#set( $transform_url = 'http://developer.onebusaway.org/modules/onebusaway-gtfs-modules/' + ${onebusaway_gtfs_version} + '/onebusaway-gtfs-transformer-cli.html' )
+
+#set( $url = 'http://nexus.onebusaway.org/service/local/artifact/maven/content?r=public&g=org.onebusaway&a=onebusaway-king-county-metro-gtfs&v=' + ${currentVersion} )
+
+  * The current {{{${url}}onebusaway-king-county-metro-gtfs.jar}}
+
+  * The current {{{${transform_url}}onebusaway-gtfs-transformer-cli.jar}}
+  
+  * The current {{{http://metro.kingcounty.gov/GTFS/}King County Metro GTFS}}
+  
+  <<NOTE:>> There is a bug in the pattern_pairs.txt file included with KCM GTFS that you unfortunately need to fix by
+hand before you can proceed with the primary fix.  Unzip the feed, edit pattern_pairs.txt and add the following to the
+end of the very first line of the file: ",change_date".  Annoying, I know.  Use the directory where you expanded the
+GTFS feed as the <<<path/to/original_gtfs>>> in the command-line below.
+  
+  When you have everything downloaded and ready to go, run the following command:  
+
++---+
+java \
+ -server \
+ -Xmx1G \
+ -classpath onebusaway-gtfs-transformer-cli.jar:onebusaway-king-county-metro-gtfs.jar \
+ org/onebusaway/gtfs_transformer/GtfsTransformerMain \
+ --transform='json:{"op":"transform","class":"org.onebusaway.king_county_metro_gtfs.transformations.KingCountyMetroStrategy"}' \
+ path/to/original_gtfs \
+ path/to/updated_gtfs
++--+
