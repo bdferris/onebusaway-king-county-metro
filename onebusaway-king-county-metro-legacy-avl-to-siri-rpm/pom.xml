@@ -66,6 +66,9 @@
               <packager>OneBusAway</packager>
               <prefix>/usr</prefix>
               <release>0</release>
+              <requires>
+                <require>tcpdump</require>
+              </requires>
               <mappings>
                 <!-- The JAR file -->
                 <mapping>

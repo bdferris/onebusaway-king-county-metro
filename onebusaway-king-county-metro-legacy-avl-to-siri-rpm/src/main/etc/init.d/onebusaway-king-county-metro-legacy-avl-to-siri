@@ -49,7 +49,7 @@ if [ -r "/etc/sysconfig/${NAME}" ]; then
 fi
 
 PACKET_HOST="${PACKET_HOST:-146.129.150.20}"
-PACKET_PORT="${PACKET_PORT:-5001}
+PACKET_PORT="${PACKET_PORT:-5001}"
 
 # Path to the jar
 JAR_FILE="${JAR_FILE:-/usr/share/onebusaway-king-county-metro-legacy-avl-to-siri/onebusaway-king-county-metro-legacy-avl-to-siri.jar}"
@@ -110,7 +110,10 @@ function start() {
     # We double background the process to detach it from the parent tty "(cmd &) &"
     $SU - $OBA_USER -c "(${APP_CMD} >> $LOG_FILE 2>&1 &)&" 
     RETVAL="$?"
-    if [ "$RETVAL" -eq 0 ]; then 
+    if [ "$RETVAL" -eq 0 ]; then
+        # We need to grab the PID of the tcpdump process.  We grep on the
+        # packet host in case multiple instance are running
+        ps aux | grep tcpdump | grep ${PACKET_HOST} | awk '{ print $2 }' > $PID_FILE 
         log_success_msg
         touch $LOCK_FILE
     else
