@@ -9,7 +9,7 @@
   <groupId>org.onebusaway</groupId>
   <artifactId>onebusaway-king-county-metro-legacy-avl-to-siri</artifactId>
 
-  <name>king-county-metro-legacy-avl-to-siri</name>
+  <name>onebusaway-king-county-metro-legacy-avl-to-siri</name>
 
   <properties>
     <onebusaway_siri_version>1.0.1-SNAPSHOT</onebusaway_siri_version>
@@ -19,7 +19,7 @@
     <repository>
       <id>krakenapps.org</id>
       <url>http://download.krakenapps.org</url>
-    </repository>      
+    </repository>
     <repository>
       <id>public.onebusaway.org</id>
       <url>http://nexus.onebusaway.org/content/groups/public/</url>
@@ -51,6 +51,13 @@
 
   <build>
     <finalName>onebusaway-king-county-metro-legacy-avl-to-siri</finalName>
+    <!-- We filter the resources to get varialbe replacement in a few config files -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -73,5 +80,92 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>build-rpm</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>rpm-maven-plugin</artifactId>
+            <version>2.1-alpha-1</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>rpm</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <name>onebusaway-king-county-metro-legacy-avl-to-siri</name>
+              <copyright>Apache License V2</copyright>
+              <group>Application/Transit</group>
+              <packager>OneBusAway</packager>
+              <prefix>/usr</prefix>
+              <release>0</release>
+              <mappings>
+                <!-- The JAR file -->
+                <mapping>
+                  <directory>/usr/share/onebusaway-king-county-metro-legacy-avl-to-siri</directory>
+                  <filemode>644</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <dependency>
+                    <includes>
+                      <include>org.onebusaway:onebusaway-king-county-metro-legacy-avl-to-siri</include>
+                    </includes>
+                  </dependency>
+                </mapping>
+                <!-- Configuration files -->
+                <mapping>
+                  <directory>/etc/onebusaway-king-county-metro-legacy-avl-to-siri</directory>
+                  <configuration>true</configuration>
+                  <filemode>640</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>target/resources</location>
+                      <includes>
+                        <include>*.conf</include>
+                      </includes>
+                    </source>
+                  </sources>
+                </mapping>
+                <!-- Init.d Scripts -->
+                <mapping>
+                  <directory>/etc/init.d</directory>
+                  <directoryIncluded>false</directoryIncluded>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>src/main/etc/init.d</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <!-- Log Directory -->
+                <mapping>
+                  <directory>/var/log/onebusaway-king-county-metro-legacy-avl-to-siri</directory>
+                  <filemode>750</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                </mapping>
+              </mappings>
+              <postinstallScriptlet>
+                <script>chkconfig --add onebusaway-king-county-metro-legacy-avl-to-siri</script>
+              </postinstallScriptlet>
+              <preremoveScriptlet>
+                <script>chkconfig --del onebusaway-king-county-metro-legacy-avl-to-siri</script>
+              </preremoveScriptlet>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
