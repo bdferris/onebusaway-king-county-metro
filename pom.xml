@@ -43,6 +43,7 @@
 
   <modules>
     <module>onebusaway-king-county-metro-gtfs</module>
+    <module>onebusaway-king-county-metro-legacy-avl-to-siri</module>
     <module>onebusaway-king-county-metro-mybus-siri</module>
     <module>onebusaway-king-county-metro-service-alerts</module>
   </modules>
