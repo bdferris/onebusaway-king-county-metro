@@ -87,6 +87,27 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <outputDirectory>target/rpm-config-resources</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/rpm-config-resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </plugin>
+          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>rpm-maven-plugin</artifactId>
             <version>2.1-alpha-1</version>
@@ -127,10 +148,7 @@
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>target/resources</location>
-                      <includes>
-                        <include>*.conf</include>
-                      </includes>
+                      <location>target/rpm-config-resources</location>
                     </source>
                   </sources>
                 </mapping>
