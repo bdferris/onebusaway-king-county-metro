@@ -207,7 +207,7 @@ public class LegacyAvlToSiriTask implements Runnable {
     if (vm.getVehicleActivity().isEmpty())
       return;
 
-    _log.info("publishing vehicles=" + vm.getVehicleActivity().size());
+    _log.debug("publishing vehicles={}", vm.getVehicleActivity().size());
 
     ServiceDelivery serviceDelivery = new ServiceDelivery();
     serviceDelivery.getVehicleMonitoringDelivery().add(vm);
@@ -240,7 +240,7 @@ public class LegacyAvlToSiriTask implements Runnable {
     @Override
     public void process(UdpPacket p) {
 
-      _log.info("UDP Packet: " + p);
+      _log.info("UDP Packet: {}", p);
 
       Buffer data = p.getData();
       int dataLength = Math.min(data.readableBytes(), rawBuffer.length);
