@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>onebusaway</artifactId>
@@ -18,6 +19,11 @@
     <spring-version>3.0.3.RELEASE</spring-version>
     <struts-version>2.1.8.1</struts-version>
     <onebusaway_gtfs_version>1.2.3</onebusaway_gtfs_version>
+    <!-- We don't want to release these to the main Maven repo, so we deploy to the OBA repo by default -->
+    <distribution_id>nexus.onebusaway.org-releases</distribution_id>
+    <distribution_url>http://nexus.onebusaway.org/content/repositories/releases/</distribution_url>
+    <snapshot_distribution_id>nexus.onebusaway.org-snapshots</snapshot_distribution_id>
+    <snapshot_distribution_url>http://nexus.onebusaway.org/content/repositories/snapshots/</snapshot_distribution_url>
   </properties>
 
   <repositories>
@@ -44,6 +50,7 @@
   <modules>
     <module>onebusaway-king-county-metro-gtfs</module>
     <module>onebusaway-king-county-metro-legacy-avl-to-siri</module>
+    <module>onebusaway-king-county-metro-legacy-avl-to-siri-rpm</module>
     <module>onebusaway-king-county-metro-mybus-siri</module>
     <module>onebusaway-king-county-metro-service-alerts</module>
   </modules>
