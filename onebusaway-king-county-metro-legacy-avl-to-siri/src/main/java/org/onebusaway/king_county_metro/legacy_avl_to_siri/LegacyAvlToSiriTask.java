@@ -240,7 +240,7 @@ public class LegacyAvlToSiriTask implements Runnable {
     @Override
     public void process(UdpPacket p) {
 
-      _log.info("UDP Packet: {}", p);
+      _log.debug("UDP Packet: {}", p);
 
       Buffer data = p.getData();
       int dataLength = Math.min(data.readableBytes(), rawBuffer.length);
