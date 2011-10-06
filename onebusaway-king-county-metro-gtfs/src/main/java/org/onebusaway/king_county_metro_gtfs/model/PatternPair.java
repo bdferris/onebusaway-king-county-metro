@@ -4,7 +4,7 @@ import org.onebusaway.csv_entities.schema.annotations.CsvField;
 import org.onebusaway.csv_entities.schema.annotations.CsvFields;
 import org.onebusaway.gtfs.model.IdentityBean;
 
-@CsvFields(filename = "pattern_pairs.txt")
+@CsvFields(filename = "pattern_pairs.txt", required=false)
 public class PatternPair extends IdentityBean<Integer> {
 
   private static final long serialVersionUID = 1L;

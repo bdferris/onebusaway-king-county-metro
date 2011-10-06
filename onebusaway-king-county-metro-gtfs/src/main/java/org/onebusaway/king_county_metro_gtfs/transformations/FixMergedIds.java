@@ -23,6 +23,8 @@ public class FixMergedIds implements GtfsTransformStrategy {
 
     fix(dao.getAllTrips(), "shapeId");
     fix(dao.getAllShapePoints(), "shapeId");
+    
+    fix(dao.getAllTrips(), "blockId");
   }
 
   private void fix(Collection<?> entities, String propertyName) {
@@ -31,9 +33,15 @@ public class FixMergedIds implements GtfsTransformStrategy {
 
       BeanWrapper w = BeanWrapperFactory.wrap(entity);
       Object v = w.getPropertyValue(propertyName);
-      if (v != null && v instanceof AgencyAndId) {
+      if (v == null)
+        continue;
+      if (v instanceof AgencyAndId) {
         AgencyAndId id = (AgencyAndId) v;
         id = fixId(id);
+        w.setPropertyValue(propertyName, id);
+      } else if (v instanceof String) {
+        String id = (String) v;
+        id = id.replaceFirst("^(a|b)_", "");
         w.setPropertyValue(propertyName, id);
       }
     }
