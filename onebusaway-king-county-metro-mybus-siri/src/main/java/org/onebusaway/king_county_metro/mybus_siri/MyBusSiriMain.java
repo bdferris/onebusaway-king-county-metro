@@ -201,7 +201,7 @@ public class MyBusSiriMain {
       fvjRef.setDatedVehicleJourneyRef(prediction.getTripId());
       mvj.setFramedVehicleJourneyRef(fvjRef);
 
-      Duration delay = _dataTypeFactory.newDuration(prediction.getScheduleDeviation());
+      Duration delay = _dataTypeFactory.newDuration(prediction.getScheduleDeviation() * 1000);
       mvj.setDelay(delay);
 
       BlockRefStructure blockRef = new BlockRefStructure();
