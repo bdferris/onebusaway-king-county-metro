@@ -16,6 +16,7 @@ import org.apache.commons.cli.Parser;
 import org.apache.commons.cli.PosixParser;
 import org.onebusaway.siri.core.SiriCoreModule;
 import org.onebusaway.siri.core.SiriServer;
+import org.onebusaway.siri.core.SiriCommon.ELogRawXmlType;
 import org.onebusaway.siri.core.guice.LifecycleService;
 import org.onebusaway.siri.jetty.SiriJettyModule;
 
@@ -34,6 +35,8 @@ public class LegacyAvlToSiriMain {
   private static final String ARG_FROM_FILE = "fromFile";
 
   private static final String ARG_PAUSE_BETWEEN_PACKETS = "pauseBetweenPackets";
+  
+  private static final String ARG_LOG_RAW_XML = "logRawXml";
 
   public static void main(String[] args) throws Exception {
     LegacyAvlToSiriMain m = new LegacyAvlToSiriMain();
@@ -95,6 +98,7 @@ public class LegacyAvlToSiriMain {
     options.addOption(ARG_PRIVATE_SERVER_URL, true, "private server url");
     options.addOption(ARG_FROM_FILE, true, "pcap data file");
     options.addOption(ARG_PAUSE_BETWEEN_PACKETS, true, "pause between packets");
+    options.addOption(ARG_LOG_RAW_XML, true, "log raw xml");
   }
 
   protected void configure(Injector injector, CommandLine cli)
@@ -127,6 +131,12 @@ public class LegacyAvlToSiriMain {
     if (cli.hasOption(ARG_PAUSE_BETWEEN_PACKETS)) {
       long pauseBetweenPackets = Long.parseLong(cli.getOptionValue(ARG_PAUSE_BETWEEN_PACKETS));
       task.setPauseBetweenPackets(pauseBetweenPackets);
+    }
+    
+    if (cli.hasOption(ARG_LOG_RAW_XML)) {
+      String value = cli.getOptionValue(ARG_LOG_RAW_XML);
+      ELogRawXmlType type = ELogRawXmlType.valueOf(value.toUpperCase());
+      server.setLogRawXmlType(type);
     }
   }
 }

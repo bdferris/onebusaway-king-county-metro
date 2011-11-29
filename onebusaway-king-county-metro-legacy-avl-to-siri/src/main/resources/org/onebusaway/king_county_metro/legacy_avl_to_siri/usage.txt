@@ -7,3 +7,6 @@ Args:
   -privateServerUrl url           the internal url your server will actually bind to, if specified (default=serverUrl)
   -fromFile path                  read PCAP packets from the specified file, instead of STDIN
   -pauseBetweenPackets time       time, in ms, to pause between parsing packets (default=no pause)
+  -logRawXml=...                  If specified, indicates how raw SIRI XML should be logged to the console.
+                                  Valid values are "NONE" (the default), "DATA", "CONTROL", and "ALL".
+  
