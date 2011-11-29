@@ -62,8 +62,6 @@ public class KingCountyMetroStrategy implements GtfsTransformStrategyFactory {
 
     configureInterlinedRoutesUpdates(transformer);
     transformer.addTransform(new LocalVsExpressUpdateStrategy());
-    
-    transformer.addTransform(new RemoveNonFrequencyTrips());
   }
 
   private void configureStopNameUpdates(GtfsTransformer transformer, String path) {
