@@ -37,6 +37,8 @@ public class LegacyAvlToSiriMain {
   private static final String ARG_PAUSE_BETWEEN_PACKETS = "pauseBetweenPackets";
   
   private static final String ARG_LOG_RAW_XML = "logRawXml";
+  
+  private static final String ARG_FORMAT_OUTPUT_XML = "formatOutputXml";
 
   public static void main(String[] args) throws Exception {
     LegacyAvlToSiriMain m = new LegacyAvlToSiriMain();
@@ -99,6 +101,7 @@ public class LegacyAvlToSiriMain {
     options.addOption(ARG_FROM_FILE, true, "pcap data file");
     options.addOption(ARG_PAUSE_BETWEEN_PACKETS, true, "pause between packets");
     options.addOption(ARG_LOG_RAW_XML, true, "log raw xml");
+    options.addOption(ARG_FORMAT_OUTPUT_XML, false, "format output xml");
   }
 
   protected void configure(Injector injector, CommandLine cli)
@@ -138,5 +141,7 @@ public class LegacyAvlToSiriMain {
       ELogRawXmlType type = ELogRawXmlType.valueOf(value.toUpperCase());
       server.setLogRawXmlType(type);
     }
+    
+    server.setFormatOutputXmlByDefault(cli.hasOption(ARG_FORMAT_OUTPUT_XML));
   }
 }
