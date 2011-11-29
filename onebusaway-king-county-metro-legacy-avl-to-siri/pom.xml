@@ -12,7 +12,7 @@
   <name>onebusaway-king-county-metro-legacy-avl-to-siri</name>
 
   <properties>
-    <onebusaway_siri_version>1.0.1-SNAPSHOT</onebusaway_siri_version>
+    <onebusaway_siri_version>1.0.3-SNAPSHOT</onebusaway_siri_version>
   </properties>
 
   <repositories>
