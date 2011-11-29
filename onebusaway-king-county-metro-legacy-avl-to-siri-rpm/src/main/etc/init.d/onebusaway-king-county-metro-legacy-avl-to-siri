@@ -38,7 +38,7 @@ else
 fi
 
 # Get the config (use this for environment specific settings)
-CONFIG_FILE="/etc/onebusaway-king-county-metro-legacy-avl-to-sirionebusaway-king-county-metro-legacy-avl-to-siri.conf"
+CONFIG_FILE="/etc/onebusaway-king-county-metro-legacy-avl-to-siri/onebusaway-king-county-metro-legacy-avl-to-siri.conf"
 if [ -r "$CONFIG_FILE" ]; then
     . ${CONFIG_FILE}
 fi
