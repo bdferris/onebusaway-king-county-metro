@@ -68,10 +68,11 @@ JAVA="${JAVA:-java}"
 PID_FILE="/var/run/${NAME}.pid"
 LOCK_FILE="/var/lock/subsys/${NAME}"
 
+JVM_ARGS="${JVM_ARGS:-}"
 CLI_ARGS="${CLI_ARGS:-}"
 
 # Define th command to launch the application
-APP_CMD="tcpdump -U -w - host ${PACKET_HOST} and port ${PACKET_PORT} | java -jar ${JAR_FILE} ${CLI_ARGS}" 
+APP_CMD="tcpdump -U -w - host ${PACKET_HOST} and port ${PACKET_PORT} | java ${JVM_ARGS} -jar ${JAR_FILE} ${CLI_ARGS}" 
 
 RETVAL="0"
 
