@@ -7,6 +7,9 @@ onebusaway-king-county-metro
 #set( $avl_url = 'http://nexus.onebusaway.org/service/local/artifact/maven/content?r=public&g=org.onebusaway&a=onebusaway-king-county-metro-legacy-avl-to-siri&e=zip&c=rpm&v=' + ${currentVersion} )
 
   * Download {{{${avl_url}}onebusaway-king-county-metro-legacy-avl-to-siri-rpm-${currentVersion}.zip}}
+  
+  []
+  
 * Fixing the KCM GTFS
 
   The KCM GTFS, {{{http://metro.kingcounty.gov/GTFS/}available here}}, has a couple of issues out of the box that need
