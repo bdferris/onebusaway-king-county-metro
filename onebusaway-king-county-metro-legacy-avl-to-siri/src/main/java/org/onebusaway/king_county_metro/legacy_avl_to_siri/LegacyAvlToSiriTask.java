@@ -32,6 +32,7 @@ import org.krakenapps.pcap.packet.PcapPacket;
 import org.krakenapps.pcap.util.Buffer;
 import org.onebusaway.siri.core.SiriServer;
 import org.onebusaway.siri.core.SiriTypeFactory;
+import org.onebusaway.siri.core.services.StatusProviderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,7 @@ import uk.org.siri.siri.VehicleActivityStructure.MonitoredVehicleJourney;
 import uk.org.siri.siri.VehicleMonitoringDeliveryStructure;
 
 @Singleton
-public class LegacyAvlToSiriTask implements Runnable {
+public class LegacyAvlToSiriTask implements Runnable, StatusProviderService {
 
   private static final Logger _log = LoggerFactory.getLogger(LegacyAvlToSiriTask.class);
 
@@ -67,6 +68,22 @@ public class LegacyAvlToSiriTask implements Runnable {
    * Default service date expiration after an hour
    */
   private int _vehicleServiceDateExpiration = 60 * 60;
+
+  /**
+   * A running count of the number of UDP packets we have seen
+   */
+  private long _udpPacketCount = 0;
+
+  /**
+   * A running count of the number of AVL packets we have seen
+   */
+  private long _packetCount = 0;
+
+  /**
+   * A running count of the number of AVL packets with valid vehicle information
+   * we have seen
+   */
+  private long _vehiclePacketCount;
 
   @Inject
   public void setSiriServer(SiriServer server) {
@@ -108,6 +125,17 @@ public class LegacyAvlToSiriTask implements Runnable {
       _task.cancel(true);
       _task = null;
     }
+  }
+
+  /****
+   * {@link StatusProviderService}
+   ****/
+
+  @Override
+  public void getStatus(Map<String, String> status) {
+    status.put("udp_packet_counter", Long.toString(_udpPacketCount));
+    status.put("packet_counter", Long.toString(_packetCount));
+    status.put("vehicle_packet_counter", Long.toString(_vehiclePacketCount));
   }
 
   /****
@@ -208,6 +236,7 @@ public class LegacyAvlToSiriTask implements Runnable {
       return;
 
     _log.debug("publishing vehicles={}", vm.getVehicleActivity().size());
+    _vehiclePacketCount += vm.getVehicleActivity().size();
 
     ServiceDelivery serviceDelivery = new ServiceDelivery();
     serviceDelivery.getVehicleMonitoringDelivery().add(vm);
@@ -241,6 +270,7 @@ public class LegacyAvlToSiriTask implements Runnable {
     public void process(UdpPacket p) {
 
       _log.debug("UDP Packet: {}", p);
+      _udpPacketCount++;
 
       Buffer data = p.getData();
       int dataLength = Math.min(data.readableBytes(), rawBuffer.length);
@@ -254,6 +284,8 @@ public class LegacyAvlToSiriTask implements Runnable {
 
       if (packets.isEmpty())
         return;
+
+      _packetCount += packets.size();
 
       publishPacketsAsSiri();
 
@@ -290,4 +322,5 @@ public class LegacyAvlToSiriTask implements Runnable {
       return lastUpdate;
     }
   }
+
 }
