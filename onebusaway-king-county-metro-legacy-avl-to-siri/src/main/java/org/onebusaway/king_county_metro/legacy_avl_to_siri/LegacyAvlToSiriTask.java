@@ -1,8 +1,13 @@
 package org.onebusaway.king_county_metro.legacy_avl_to_siri;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.WritableByteChannel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +55,9 @@ public class LegacyAvlToSiriTask implements Runnable, StatusProviderService {
   private static final DateFormat _serviceDateFormat = new SimpleDateFormat(
       "yyyy-MM-dd");
 
+  private static final DateFormat _packetTimeFormat = new SimpleDateFormat(
+      "yyyy-MM-dd_HH-mm-ss.SSS");
+
   private List<Packet> packets = new ArrayList<Packet>();
 
   private Map<String, VehicleServiceDateRecord> _serviceDateRecordsByVehicleId = new HashMap<String, LegacyAvlToSiriTask.VehicleServiceDateRecord>();
@@ -63,6 +71,8 @@ public class LegacyAvlToSiriTask implements Runnable, StatusProviderService {
   private InputStream _source = System.in;
 
   private long _pauseBetwenPackets;
+
+  private File _packetOutputDirectory = null;
 
   /**
    * Default service date expiration after an hour
@@ -112,6 +122,10 @@ public class LegacyAvlToSiriTask implements Runnable, StatusProviderService {
    */
   public void setVehicleServiceDateExpiration(int vehicleServiceDateExpiration) {
     _vehicleServiceDateExpiration = vehicleServiceDateExpiration;
+  }
+
+  public void setPacketOutputDirectory(File path) {
+    _packetOutputDirectory = path;
   }
 
   @PostConstruct
@@ -261,6 +275,27 @@ public class LegacyAvlToSiriTask implements Runnable, StatusProviderService {
     return record.getServiceDate();
   }
 
+  private synchronized void writePacketsIfNeeded(ByteBuffer buffer) {
+    if (_packetOutputDirectory == null) {
+      return;
+    }
+    if (!_packetOutputDirectory.exists()) {
+      _packetOutputDirectory.mkdirs();
+    }
+    String name = "packet-" + _packetTimeFormat.format(new Date());
+    File file = new File(_packetOutputDirectory, name);
+    try {
+      BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(
+          file));
+      WritableByteChannel channel = Channels.newChannel(out);
+      channel.write(buffer);
+      buffer.rewind();
+      out.close();
+    } catch (IOException ex) {
+      throw new IllegalStateException(ex);
+    }
+  }
+
   private class UdpHandler implements UdpProcessor {
 
     private byte[] rawBuffer = new byte[1024];
@@ -280,6 +315,8 @@ public class LegacyAvlToSiriTask implements Runnable, StatusProviderService {
       packets.clear();
       buffer.rewind();
 
+      writePacketsIfNeeded(buffer);
+
       PacketIO.parsePacket(buffer, dataLength, packets);
 
       if (packets.isEmpty())
@@ -297,7 +334,6 @@ public class LegacyAvlToSiriTask implements Runnable, StatusProviderService {
         }
       }
     }
-
   }
 
   private static class VehicleServiceDateRecord {

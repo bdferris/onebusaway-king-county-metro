@@ -1,6 +1,7 @@
 package org.onebusaway.king_county_metro.legacy_avl_to_siri;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,6 +43,8 @@ public class LegacyAvlToSiriMain {
   private static final String ARG_LOG_RAW_XML = "logRawXml";
 
   private static final String ARG_FORMAT_OUTPUT_XML = "formatOutputXml";
+
+  private static final String ARG_PACKET_OUTPUT_PATH = "packetOutputPath";
 
   public static void main(String[] args) throws Exception {
     LegacyAvlToSiriMain m = new LegacyAvlToSiriMain();
@@ -134,6 +137,7 @@ public class LegacyAvlToSiriMain {
     options.addOption(ARG_PAUSE_BETWEEN_PACKETS, true, "pause between packets");
     options.addOption(ARG_LOG_RAW_XML, true, "log raw xml");
     options.addOption(ARG_FORMAT_OUTPUT_XML, false, "format output xml");
+    options.addOption(ARG_PACKET_OUTPUT_PATH, true, "packet output path");
   }
 
   protected void configure(CommandLine cli) throws FileNotFoundException {
@@ -168,6 +172,11 @@ public class LegacyAvlToSiriMain {
       String value = cli.getOptionValue(ARG_LOG_RAW_XML);
       ELogRawXmlType type = ELogRawXmlType.valueOf(value.toUpperCase());
       _server.setLogRawXmlType(type);
+    }
+
+    if (cli.hasOption(ARG_PACKET_OUTPUT_PATH)) {
+      _task.setPacketOutputDirectory(new File(
+          cli.getOptionValue(ARG_PACKET_OUTPUT_PATH)));
     }
 
     _server.setFormatOutputXmlByDefault(cli.hasOption(ARG_FORMAT_OUTPUT_XML));
