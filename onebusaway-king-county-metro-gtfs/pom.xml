@@ -6,7 +6,6 @@
     <groupId>org.onebusaway</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>org.onebusaway</groupId>
   <artifactId>onebusaway-king-county-metro-gtfs</artifactId>
   <name>onebusaway-king-county-metro-gtfs</name>
   <description>Modifications and improvements on the base King County Metro GTFS</description>
@@ -24,7 +23,6 @@
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>1.2.2</version>
         <executions>
           <execution>
             <phase>package</phase>

@@ -6,7 +6,6 @@
     <groupId>org.onebusaway</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>org.onebusaway</groupId>
   <artifactId>onebusaway-king-county-metro-legacy-avl-to-siri</artifactId>
 
   <name>onebusaway-king-county-metro-legacy-avl-to-siri</name>

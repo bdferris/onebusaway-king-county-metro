@@ -7,7 +7,6 @@
     <groupId>org.onebusaway</groupId>
     <version>1.1.0</version>
   </parent>
-  <groupId>org.onebusaway</groupId>
   <artifactId>onebusaway-king-county-metro</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>onebusaway-king-county-metro</name>
@@ -15,7 +14,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <onebusaway.version>0.0.1-SNAPSHOT</onebusaway.version>
+    <onebusaway.version>1.0.2-SNAPSHOT</onebusaway.version>
     <spring-version>3.0.3.RELEASE</spring-version>
     <struts-version>2.1.8.1</struts-version>
     <onebusaway_gtfs_version>1.2.6-SNAPSHOT</onebusaway_gtfs_version>
@@ -52,6 +51,7 @@
     <module>onebusaway-king-county-metro-legacy-avl-to-siri</module>
     <module>onebusaway-king-county-metro-mybus-siri</module>
     <module>onebusaway-king-county-metro-service-alerts</module>
+    <module>onebusaway-king-county-metro-sandbox</module>
   </modules>
 
   <!-- This is where we control the master dependency version used by all modules -->
