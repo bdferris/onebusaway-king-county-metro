@@ -1,11 +1,11 @@
 package org.onebusaway.king_county_metro.legacy_avl_to_siri;
 
-
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Hex;
 import org.onebusaway.king_county_metro.legacy_avl_to_siri.Packet.EStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +41,8 @@ public class PacketIO {
       }
 
       Packet packet = new Packet();
+
+      int startPosition = buffer.position();
 
       short vehicleId = buffer.getShort();
       packet.setVehicleId(vehicleId);
@@ -123,6 +125,15 @@ public class PacketIO {
       packet.setTime(time);
 
       buffer.position(buffer.position() + 9);
+
+      int endPosition = buffer.position();
+
+      if (packet.getVehicleId() == 2668) {
+        buffer.position(startPosition);
+        byte[] copy = new byte[endPosition - startPosition];
+        buffer.get(copy);
+        System.out.println(Hex.encodeHex(copy));
+      }
 
       packets.add(packet);
     }

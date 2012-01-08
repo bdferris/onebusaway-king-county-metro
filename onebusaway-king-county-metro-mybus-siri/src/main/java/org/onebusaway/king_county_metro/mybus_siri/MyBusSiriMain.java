@@ -26,6 +26,7 @@ import org.onebusaway.siri.core.SiriServer;
 import org.onebusaway.siri.core.guice.LifecycleService;
 import org.onebusaway.siri.core.subscriptions.server.SiriServerSubscriptionManager;
 import org.onebusaway.siri.jetty.SiriJettyModule;
+import org.onebusaway.siri.jetty.StatusServletSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +120,8 @@ public class MyBusSiriMain {
       SiriServerSubscriptionManager manager = injector.getInstance(SiriServerSubscriptionManager.class);
       manager.setConsumerAddressDefault(_consumerAddressDefault);
     }
+    
+    injector.getInstance(StatusServletSource.class);
 
     _lifecycleService = injector.getInstance(LifecycleService.class);
     _lifecycleService.start();
