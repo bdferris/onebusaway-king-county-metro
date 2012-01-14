@@ -69,7 +69,7 @@ JVM_ARGS="${JVM_ARGS:-}"
 CLI_ARGS="${CLI_ARGS:-}"
 
 # Define the command to launch the application
-APP_CMD="java ${JVM_ARGS} -jar ${JAR_FILE} ${CLI_ARGS}" 
+APP_CMD="java ${JVM_ARGS} -jar ${JAR_FILE} -daemonize -pidFile ${PID_FILE} -outputFile \"&2\" -errorFile ${LOG_FILE} ${CLI_ARGS}" 
 
 RETVAL="0"
 
