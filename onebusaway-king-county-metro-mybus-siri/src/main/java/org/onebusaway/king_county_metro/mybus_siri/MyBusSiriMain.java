@@ -12,15 +12,15 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.datatype.DatatypeConfigurationException;
+import javax.inject.Inject;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
+import org.apache.commons.cli.PosixParser;
+import org.onebusaway.cli.Daemonizer;
 import org.onebusaway.siri.core.SiriCoreModule;
 import org.onebusaway.siri.core.SiriServer;
 import org.onebusaway.siri.core.guice.LifecycleService;
@@ -48,6 +48,12 @@ import com.google.inject.Module;
 
 public class MyBusSiriMain {
 
+  private static final String ARG_ID = "id";
+
+  private static final String ARG_SERVER_URL = "serverUrl";
+
+  private static final String ARG_PRIVATE_SERVER_URL = "privateServerUrl";
+
   private static final String ARG_CONSUMER_ADDRESS_DEFAULT = "consumerAddressDefault";
 
   private static Logger _log = LoggerFactory.getLogger(MyBusSiriMain.class);
@@ -64,66 +70,72 @@ public class MyBusSiriMain {
 
   private int _serverPort = TIMEPOINT_PREDICTION_SERVER_PORT;
 
-  private SiriServer _siriServer;
+  private SiriServer _server;
 
-  private String _consumerAddressDefault;
-
-  private boolean _skip = false;
+  private SiriServerSubscriptionManager _subscriptionManager;
 
   private LifecycleService _lifecycleService;
 
-  public static void main(String[] args) throws IOException,
-      DatatypeConfigurationException, ParseException {
-
+  public static void main(String[] args) throws Exception {
     _dataTypeFactory = DatatypeFactory.newInstance();
-
     MyBusSiriMain m = new MyBusSiriMain();
+    m.run(args);
+  }
+
+  @Inject
+  public void setServer(SiriServer server) {
+    _server = server;
+  }
+
+  @Inject
+  public void setSubscriptionManager(
+      SiriServerSubscriptionManager subscriptionManager) {
+    _subscriptionManager = subscriptionManager;
+  }
+
+  @Inject
+  public void setStatusServletSource(StatusServletSource statusServletSource) {
+    // Noop to make sure the StatusServlet is instantiated
+  }
+
+  @Inject
+  public void setLifecycleService(LifecycleService lifecycleService) {
+    _lifecycleService = lifecycleService;
+  }
+
+  public void run(String[] args) throws Exception {
 
     Options options = new Options();
+    options.addOption(ARG_ID, true, "");
+    options.addOption(ARG_SERVER_URL, true, "");
+    options.addOption(ARG_PRIVATE_SERVER_URL, true, "");
     options.addOption(ARG_CONSUMER_ADDRESS_DEFAULT, true, "");
+    Daemonizer.buildOptions(options);
 
-    Parser parser = new GnuParser();
+    Parser parser = new PosixParser();
     CommandLine cli = parser.parse(options, args);
-
-    args = cli.getArgs();
-
-    String serverUrl = null;
-
-    if (args.length > 0)
-      serverUrl = args[0];
-
-    if (cli.hasOption(ARG_CONSUMER_ADDRESS_DEFAULT)) {
-      String consumerAddressDefault = cli.getOptionValue(ARG_CONSUMER_ADDRESS_DEFAULT);
-      m.setConsumerAddressDefault(consumerAddressDefault);
-    }
-
-    m.run(serverUrl);
-  }
-
-  private void setConsumerAddressDefault(String consumerAddressDefault) {
-    _consumerAddressDefault = consumerAddressDefault;
-  }
-
-  public void run(String serverUrl) throws IOException {
+    Daemonizer.handleDaemonization(cli);
 
     List<Module> modules = new ArrayList<Module>();
     modules.addAll(SiriCoreModule.getModules());
     modules.add(new SiriJettyModule());
     Injector injector = Guice.createInjector(modules);
+    injector.injectMembers(this);
 
-    _siriServer = injector.getInstance(SiriServer.class);
-
-    if (serverUrl != null)
-      _siriServer.setUrl(serverUrl);
-
-    if (_consumerAddressDefault != null) {
-      SiriServerSubscriptionManager manager = injector.getInstance(SiriServerSubscriptionManager.class);
-      manager.setConsumerAddressDefault(_consumerAddressDefault);
+    if (cli.hasOption(ARG_ID)) {
+      _server.setIdentity(cli.getOptionValue(ARG_ID));
     }
-    
-    injector.getInstance(StatusServletSource.class);
+    if (cli.hasOption(ARG_SERVER_URL)) {
+      _server.setUrl(cli.getOptionValue(ARG_SERVER_URL));
+    }
+    if (cli.hasOption(ARG_PRIVATE_SERVER_URL)) {
+      _server.setPrivateUrl(cli.getOptionValue(ARG_PRIVATE_SERVER_URL));
+    }
+    if (cli.hasOption(ARG_CONSUMER_ADDRESS_DEFAULT)) {
+      String consumerAddressDefault = cli.getOptionValue(ARG_CONSUMER_ADDRESS_DEFAULT);
+      _subscriptionManager.setConsumerAddressDefault(consumerAddressDefault);
+    }
 
-    _lifecycleService = injector.getInstance(LifecycleService.class);
     _lifecycleService.start();
 
     _receiver = new TimepointPredictionReceiver(_serverName, _serverPort);
@@ -131,9 +143,6 @@ public class MyBusSiriMain {
   }
 
   private void parsePredictions(Hashtable<?, ?> ht) {
-
-    if (_skip)
-      return;
 
     Map<String, List<TimepointPrediction>> predictionsByVehicleId = new HashMap<String, List<TimepointPrediction>>();
 
@@ -227,7 +236,7 @@ public class MyBusSiriMain {
       progress.setPercentage(BigDecimal.valueOf(0));
     }
 
-    _siriServer.publish(delivery);
+    _server.publish(delivery);
     /*
      * int rc = _siriServer.publish(delivery); if (rc > 0) _skip = true;
      */

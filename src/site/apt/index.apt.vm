@@ -9,6 +9,14 @@ onebusaway-king-county-metro
   * Download {{{${avl_url}}onebusaway-king-county-metro-legacy-avl-to-siri-rpm-${currentVersion}.zip}}
   
   []
+
+* MyBus to SIRI
+
+#set( $mybus_url = 'http://nexus.onebusaway.org/service/local/artifact/maven/content?r=public&g=org.onebusaway&a=onebusaway-king-county-metro-mybus-siri&e=zip&c=rpm&v=' + ${currentVersion} )
+
+  * Download {{{${mybus_url}}onebusaway-king-county-metro-mybus-siri-${currentVersion}.zip}}
+  
+  []
   
 * Fixing the KCM GTFS
 

@@ -15,7 +15,7 @@
     <dependency>
       <groupId>edu.washington.its</groupId>
       <artifactId>sdd</artifactId>
-      <version>1.0.0</version>
+      <version>2.3.0</version>
     </dependency>
 
     <dependency>
@@ -29,6 +29,11 @@
       <artifactId>commons-cli</artifactId>
       <version>1.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.onebusaway</groupId>
+      <artifactId>onebusaway-cli</artifactId>
+      <version>1.0.0</version>
+    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -40,4 +45,136 @@
     </dependency>
 
   </dependencies>
+
+  <build>
+    <finalName>onebusaway-king-county-metro-mybus-siri</finalName>
+    <!-- We filter the resources to get variable replacement in a few config files -->
+    <plugins>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedClassifierName>withAllDependencies</shadedClassifierName>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.onebusaway.king_county_metro.mybus_siri.MyBusSiriMain</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>rpm</id>
+      <activation>
+        <file>
+          <exists>/usr/bin/rpmbuild</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>rpm-maven-plugin</artifactId>
+            <version>2.1-alpha-1</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>rpm</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <name>onebusaway-king-county-metro-mybus-siri</name>
+              <copyright>Apache License V2</copyright>
+              <group>Application/Transit</group>
+              <packager>OneBusAway</packager>
+              <prefix>/usr</prefix>
+              <release>0</release>
+              <requires>
+                <require>tcpdump</require>
+              </requires>
+              <mappings>
+                <!-- The JAR file -->
+                <mapping>
+                  <directory>/usr/share/onebusaway-king-county-metro-mybus-siri</directory>
+                  <filemode>644</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <artifact />
+                </mapping>
+                <!-- Configuration files -->
+                <mapping>
+                  <directory>/etc/onebusaway-king-county-metro-mybus-siri</directory>
+                  <configuration>true</configuration>
+                  <filemode>640</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>src/main/rpm/etc/onebusaway-king-county-metro-mybus-siri</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <!-- Init.d Scripts -->
+                <mapping>
+                  <directory>/etc/init.d</directory>
+                  <directoryIncluded>false</directoryIncluded>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>src/main/rpm/etc/init.d</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <!-- Log Directory -->
+                <mapping>
+                  <directory>/var/log/onebusaway-king-county-metro-mybus-siri</directory>
+                  <filemode>750</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                </mapping>
+              </mappings>
+              <postinstallScriptlet>
+                <script>chkconfig --add onebusaway-king-county-metro-mybus-siri</script>
+              </postinstallScriptlet>
+              <preremoveScriptlet>
+                <script>chkconfig --del onebusaway-king-county-metro-mybus-siri</script>
+              </preremoveScriptlet>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <descriptors>
+                    <descriptor>assembly.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
