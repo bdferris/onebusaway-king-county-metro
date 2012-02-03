@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import uk.org.siri.siri.BlockRefStructure;
 import uk.org.siri.siri.DataFrameRefStructure;
 import uk.org.siri.siri.FramedVehicleJourneyRefStructure;
-import uk.org.siri.siri.LocationStructure;
 import uk.org.siri.siri.ProgressBetweenStopsStructure;
 import uk.org.siri.siri.ServiceDelivery;
 import uk.org.siri.siri.VehicleActivityStructure;
@@ -223,11 +222,6 @@ public class MyBusSiriMain {
       VehicleRefStructure vehicleRef = new VehicleRefStructure();
       vehicleRef.setValue(prediction.getVehicleId());
       mvj.setVehicleRef(vehicleRef);
-
-      LocationStructure location = new LocationStructure();
-      location.setLatitude(BigDecimal.valueOf(47.5955716126442));
-      location.setLongitude(BigDecimal.valueOf(-122.33160460882567));
-      mvj.setVehicleLocation(location);
 
       ProgressBetweenStopsStructure progress = new ProgressBetweenStopsStructure();
       va.setProgressBetweenStops(progress);
