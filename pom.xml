@@ -5,24 +5,21 @@
   <parent>
     <artifactId>onebusaway</artifactId>
     <groupId>org.onebusaway</groupId>
-    <version>1.1.0</version>
+    <version>1.1.6</version>
   </parent>
   <artifactId>onebusaway-king-county-metro</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
   <name>onebusaway-king-county-metro</name>
   <description>King County Metro modules</description>
-  <packaging>pom</packaging>
+  <url>https://github.com/OneBusAway/onebusaway-king-county-metro/wiki/</url>
 
   <properties>
     <onebusaway.version>1.0.2-SNAPSHOT</onebusaway.version>
     <spring-version>3.0.3.RELEASE</spring-version>
     <struts-version>2.1.8.1</struts-version>
     <onebusaway_gtfs_version>1.2.6-SNAPSHOT</onebusaway_gtfs_version>
-    <!-- We don't want to release these to the main Maven repo, so we deploy to the OBA repo by default -->
-    <distribution_id>nexus.onebusaway.org-releases</distribution_id>
-    <distribution_url>http://nexus.onebusaway.org/content/repositories/releases/</distribution_url>
-    <snapshot_distribution_id>nexus.onebusaway.org-snapshots</snapshot_distribution_id>
-    <snapshot_distribution_url>http://nexus.onebusaway.org/content/repositories/snapshots/</snapshot_distribution_url>
   </properties>
 
   <repositories>
@@ -33,10 +30,15 @@
   </repositories>
 
   <scm>
-    <connection>scm:svn:http://onebusaway.googlecode.com/svn/onebusaway-king-county-metro/trunk</connection>
-    <developerConnection>scm:svn:https://onebusaway.googlecode.com/svn/onebusaway-king-county-metro/trunk</developerConnection>
-    <url>http://code.google.com/p/onebusaway/source/browse/#svn/onebusaway-king-county-metro/trunk</url>
+    <connection>scm:git:http://github.com/OneBusAway/onebusaway-king-county-metro.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/OneBusAway/onebusaway-king-county-metro.git</developerConnection>
+    <url>http://github.com/OneBusAway/onebusaway-king-county-metro</url>
   </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/OneBusAway/onebusaway-king-county-metro/issues</url>
+  </issueManagement>
 
   <distributionManagement>
     <!-- Even though we specify this in the parent pom, we need to specify it here to have full control over the url -->
