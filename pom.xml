@@ -13,7 +13,7 @@
 
   <name>onebusaway-king-county-metro</name>
   <description>King County Metro modules</description>
-  <url>https://github.com/OneBusAway/onebusaway-king-county-metro/wiki/</url>
+  <url>https://github.com/bdferris/onebusaway-king-county-metro/wiki/</url>
 
   <properties>
     <onebusaway.version>1.0.2-SNAPSHOT</onebusaway.version>
@@ -30,14 +30,14 @@
   </repositories>
 
   <scm>
-    <connection>scm:git:http://github.com/OneBusAway/onebusaway-king-county-metro.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/OneBusAway/onebusaway-king-county-metro.git</developerConnection>
-    <url>http://github.com/OneBusAway/onebusaway-king-county-metro</url>
+    <connection>scm:git:http://github.com/bdferris/onebusaway-king-county-metro.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/bdferris/onebusaway-king-county-metro.git</developerConnection>
+    <url>http://github.com/bdferris/onebusaway-king-county-metro</url>
   </scm>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/OneBusAway/onebusaway-king-county-metro/issues</url>
+    <url>https://github.com/bdferris/onebusaway-king-county-metro/issues</url>
   </issueManagement>
 
   <distributionManagement>
