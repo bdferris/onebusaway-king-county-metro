@@ -5,12 +5,16 @@ import its.backbone.sdd.SddReceiver;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 import javax.xml.datatype.DatatypeFactory;
@@ -23,6 +27,7 @@ import org.apache.commons.cli.PosixParser;
 import org.onebusaway.cli.Daemonizer;
 import org.onebusaway.siri.core.SiriCoreModule;
 import org.onebusaway.siri.core.SiriServer;
+import org.onebusaway.siri.core.SiriTypeFactory;
 import org.onebusaway.siri.core.guice.LifecycleService;
 import org.onebusaway.siri.core.subscriptions.server.SiriServerSubscriptionManager;
 import org.onebusaway.siri.jetty.SiriJettyModule;
@@ -31,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.org.siri.siri.BlockRefStructure;
-import uk.org.siri.siri.DataFrameRefStructure;
 import uk.org.siri.siri.FramedVehicleJourneyRefStructure;
 import uk.org.siri.siri.ProgressBetweenStopsStructure;
 import uk.org.siri.siri.ServiceDelivery;
@@ -74,6 +78,10 @@ public class MyBusSiriMain {
   private SiriServerSubscriptionManager _subscriptionManager;
 
   private LifecycleService _lifecycleService;
+  
+  private TimeZone _timeZone = TimeZone.getTimeZone("America/Los_Angeles");
+  
+  private DateFormat _serviceDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   public static void main(String[] args) throws Exception {
     _dataTypeFactory = DatatypeFactory.newInstance();
@@ -114,6 +122,8 @@ public class MyBusSiriMain {
     Parser parser = new PosixParser();
     CommandLine cli = parser.parse(options, args);
     Daemonizer.handleDaemonization(cli);
+    
+    _serviceDateFormat.setTimeZone(_timeZone);
 
     List<Module> modules = new ArrayList<Module>();
     modules.addAll(SiriCoreModule.getModules());
@@ -189,7 +199,7 @@ public class MyBusSiriMain {
     List<VehicleActivityStructure> activity = vm.getVehicleActivity();
 
     for (List<TimepointPrediction> predictions : predictionsByVehicleId.values()) {
-
+      
       VehicleActivityStructure va = new VehicleActivityStructure();
       activity.add(va);
 
@@ -205,10 +215,9 @@ public class MyBusSiriMain {
       MonitoredVehicleJourney mvj = new MonitoredVehicleJourney();
       va.setMonitoredVehicleJourney(mvj);
 
+      String serviceDate = getServiceDateForPrediction(prediction);
       FramedVehicleJourneyRefStructure fvjRef = new FramedVehicleJourneyRefStructure();
-      DataFrameRefStructure dataFrameRef = new DataFrameRefStructure();
-      dataFrameRef.setValue("data-frame-ref");
-      fvjRef.setDataFrameRef(dataFrameRef);
+      fvjRef.setDataFrameRef(SiriTypeFactory.dataFrameRef(serviceDate));
       fvjRef.setDatedVehicleJourneyRef(prediction.getTripId());
       mvj.setFramedVehicleJourneyRef(fvjRef);
 
@@ -258,6 +267,13 @@ public class MyBusSiriMain {
     }
 
     return prev;
+  }
+  
+  private String getServiceDateForPrediction(TimepointPrediction prediction) {
+    Calendar c = Calendar.getInstance(_timeZone);
+    c.add(Calendar.SECOND, -prediction.getTimeOfPrediction());
+    c.add(Calendar.HOUR, 12);
+    return _serviceDateFormat.format(c.getTime());    
   }
 
   private class TimepointPredictionReceiver extends SddReceiver {
