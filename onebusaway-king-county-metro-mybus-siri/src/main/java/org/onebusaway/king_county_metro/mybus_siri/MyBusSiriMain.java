@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
@@ -25,10 +27,10 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.Parser;
 import org.apache.commons.cli.PosixParser;
 import org.onebusaway.cli.Daemonizer;
+import org.onebusaway.guice.jsr250.LifecycleService;
 import org.onebusaway.siri.core.SiriCoreModule;
 import org.onebusaway.siri.core.SiriServer;
 import org.onebusaway.siri.core.SiriTypeFactory;
-import org.onebusaway.siri.core.guice.LifecycleService;
 import org.onebusaway.siri.core.subscriptions.server.SiriServerSubscriptionManager;
 import org.onebusaway.siri.jetty.SiriJettyModule;
 import org.onebusaway.siri.jetty.StatusServletSource;
@@ -125,9 +127,9 @@ public class MyBusSiriMain {
     
     _serviceDateFormat.setTimeZone(_timeZone);
 
-    List<Module> modules = new ArrayList<Module>();
-    modules.addAll(SiriCoreModule.getModules());
-    modules.add(new SiriJettyModule());
+    Set<Module> modules = new HashSet<Module>();
+    SiriCoreModule.addModuleAndDependencies(modules);
+    SiriJettyModule.addModuleAndDependencies(modules);
     Injector injector = Guice.createInjector(modules);
     injector.injectMembers(this);
 

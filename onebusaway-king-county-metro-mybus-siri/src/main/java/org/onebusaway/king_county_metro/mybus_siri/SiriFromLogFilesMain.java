@@ -5,9 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -19,9 +20,9 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
+import org.onebusaway.guice.jsr250.LifecycleService;
 import org.onebusaway.siri.core.SiriCoreModule;
 import org.onebusaway.siri.core.SiriServer;
-import org.onebusaway.siri.core.guice.LifecycleService;
 import org.onebusaway.siri.core.handlers.SiriSubscriptionManagerListener;
 import org.onebusaway.siri.core.subscriptions.server.SiriServerSubscriptionManager;
 import org.onebusaway.siri.core.versioning.SiriVersioning;
@@ -87,9 +88,9 @@ public class SiriFromLogFilesMain {
 
   public void run(String serverUrl, File dataDir) throws IOException {
 
-    List<Module> modules = new ArrayList<Module>();
-    modules.addAll(SiriCoreModule.getModules());
-    modules.add(new SiriJettyModule());
+    Set<Module> modules = new HashSet<Module>();
+    SiriCoreModule.addModuleAndDependencies(modules);
+    SiriJettyModule.addModuleAndDependencies(modules);
     Injector injector = Guice.createInjector(modules);
 
     _siriServer = injector.getInstance(SiriServer.class);
