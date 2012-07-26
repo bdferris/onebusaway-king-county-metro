@@ -33,7 +33,7 @@ import org.onebusaway.siri.core.SiriServer;
 import org.onebusaway.siri.core.SiriTypeFactory;
 import org.onebusaway.siri.core.subscriptions.server.SiriServerSubscriptionManager;
 import org.onebusaway.siri.jetty.SiriJettyModule;
-import org.onebusaway.siri.jetty.StatusServletSource;
+import org.onebusaway.status_exporter.StatusServletSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
