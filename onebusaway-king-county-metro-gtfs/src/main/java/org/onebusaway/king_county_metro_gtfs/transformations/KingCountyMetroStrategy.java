@@ -24,7 +24,13 @@ import org.onebusaway.king_county_metro_gtfs.model.PatternPair;
  */
 public class KingCountyMetroStrategy implements GtfsTransformStrategyFactory {
 
+  private String _baseUrl = "http://onebusaway-puget-sound.googlecode.com/svn/wiki";
+
   private String _path;
+
+  public void setBaseUrl(String baseUrl) {
+    _baseUrl = baseUrl;
+  }
 
   public void setPath(String path) {
     _path = path;
@@ -49,16 +55,14 @@ public class KingCountyMetroStrategy implements GtfsTransformStrategyFactory {
     transformer.addTransform(new RemoveEmptyBlockTripsStrategy());
     transformer.addTransform(new EnsureStopTimesIncreaseUpdateStrategy());
 
-    configureCalendarUpdates(
-        transformer,
-        "http://onebusaway.googlecode.com/svn/wiki/KingCountyMetroCalendarModifications.wiki");
+    configureCalendarUpdates(transformer, _baseUrl
+        + "/KingCountyMetroCalendarModifications.wiki");
 
-    configureStopNameUpdates(
-        transformer,
-        "http://onebusaway.googlecode.com/svn/wiki/KingCountyMetroStopNameModifications.wiki");
+    configureStopNameUpdates(transformer, _baseUrl
+        + "/KingCountyMetroStopNameModifications.wiki");
 
-    GtfsTransformerLibrary.configureTransformation(transformer,
-        "http://onebusaway.googlecode.com/svn/wiki/KingCountyMetroModifications.wiki");
+    GtfsTransformerLibrary.configureTransformation(transformer, _baseUrl
+        + "/KingCountyMetroModifications.wiki");
 
     configureInterlinedRoutesUpdates(transformer);
     transformer.addTransform(new LocalVsExpressUpdateStrategy());
