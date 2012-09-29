@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.onebusaway.collections.FactoryMap;
 import org.onebusaway.gtfs.model.AgencyAndId;
+import org.onebusaway.gtfs.model.Frequency;
 import org.onebusaway.gtfs.model.StopTime;
 import org.onebusaway.gtfs.model.Trip;
 import org.onebusaway.gtfs.services.GtfsMutableRelationalDao;
@@ -56,12 +57,17 @@ public class RemoveMergedTripsStrategy implements GtfsTransformStrategy {
         Trip b = trips.get(1);
 
         List<StopTime> sta = dao.getStopTimesForTrip(a);
+        List<Frequency> frequenciesForA = dao.getFrequenciesForTrip(a);
 
         dao.removeEntity(a);
         dao.removeEntity(b);
 
-        for (StopTime st : sta)
+        for (StopTime st : sta) {
           dao.removeEntity(st);
+        }
+        for (Frequency frequency : frequenciesForA) {
+          dao.removeEntity(frequency);
+        }
 
         AgencyAndId id = b.getId();
         id = new AgencyAndId(id.getAgencyId(), tripId);
