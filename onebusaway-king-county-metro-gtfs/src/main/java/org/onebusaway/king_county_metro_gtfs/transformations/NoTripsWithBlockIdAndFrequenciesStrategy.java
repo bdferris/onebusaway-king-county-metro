@@ -17,11 +17,21 @@ public class NoTripsWithBlockIdAndFrequenciesStrategy implements
 
     for (Trip trip : dao.getAllTrips()) {
       List<Frequency> frequencies = dao.getFrequenciesForTrip(trip);
-      if (!frequencies.isEmpty()) {
+      if (!frequencies.isEmpty() && !isLabelOnly(frequencies)
+          && trip.getBlockId() != null) {
         trip.setBlockId(null);
       }
     }
 
     UpdateLibrary.clearDaoCache(dao);
+  }
+
+  private boolean isLabelOnly(List<Frequency> frequencies) {
+    for (Frequency frequency : frequencies) {
+      if (frequency.getLabelOnly() == 0) {
+        return false;
+      }
+    }
+    return true;
   }
 }
